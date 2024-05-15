@@ -22,8 +22,23 @@ export class AuthController {
   @Public()
   @Post('signup')
   @HttpCode(HttpStatus.CREATED)
-  async signup(@Body() signUpDto: SignUpDto) {
-    return await this.authService.signup(signUpDto);
+  async signup(
+    @Body() signUpDto: SignUpDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { accessToken, refreshToken } =
+      await this.authService.signup(signUpDto);
+    res.cookie('jwt_refresh', refreshToken, {
+      httpOnly: true, //accessible only by web server
+      // secure: true, //https
+      sameSite: 'none', //cross-site cookie
+      expires: new Date(
+        Date.now() + Number(process.env.JWT_REFRESH_EXPIRES_IN) * 1000,
+      ), // im ms* 30
+    });
+    delete signUpDto.password;
+    delete signUpDto.confirmPassword;
+    return { user: signUpDto, accessToken };
   }
 
   @Public()
@@ -47,7 +62,6 @@ export class AuthController {
     return { accessToken };
   }
 
-  // @UseGuards(RtGuard)
   @Get('logout')
   @HttpCode(HttpStatus.OK)
   async logout(

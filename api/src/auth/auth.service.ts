@@ -17,7 +17,7 @@ export class AuthService {
 
   async signup(signUpDto: SignUpDto): Promise<Tokens> {
     const { name, email } = signUpDto;
-    const password = await this.hashDate(signUpDto.password);
+    const password = await this.hashData(signUpDto.password);
 
     const user = await this.userService.create({
       name,
@@ -26,7 +26,7 @@ export class AuthService {
     });
 
     const tokens = {
-      accessToken: await this.getAccessToken(user.id, user.email, user.name),
+      accessToken: this.getAccessToken(user.id, user.email, user.name),
       refreshToken: this.getRefreshToken(user.id, user.email),
     };
     await this.updateRefreshToken(user.id, tokens.refreshToken);
@@ -50,7 +50,7 @@ export class AuthService {
     }
 
     const tokens = {
-      accessToken: await this.getAccessToken(user.id, user.email, user.name),
+      accessToken: this.getAccessToken(user.id, user.email, user.name),
       refreshToken: this.getRefreshToken(user.id, user.email),
     };
     await this.updateRefreshToken(user.id, tokens.refreshToken);
@@ -83,23 +83,17 @@ export class AuthService {
    ** Helper Funcions
    */
 
-  hashDate(data: string) {
+  hashData(data: string) {
     return bcrypt.hash(data, 10);
   }
 
-  async getAccessToken(
-    userId: string,
-    email: string,
-    name: string,
-  ): Promise<string> {
-    const accessToken = await Promise.resolve(
-      this.jwtService.signAsync(
-        { sub: userId, email, name },
-        {
-          secret: process.env.JWT_ACCESS_SECRET,
-          expiresIn: process.env.JWT_ACCESS_EXPIRES_IN,
-        },
-      ),
+  getAccessToken(userId: string, email: string, name: string): string {
+    const accessToken = this.jwtService.sign(
+      { sub: userId, email, name },
+      {
+        secret: process.env.JWT_ACCESS_SECRET,
+        expiresIn: process.env.JWT_ACCESS_EXPIRES_IN,
+      },
     );
 
     return accessToken;
@@ -121,7 +115,7 @@ export class AuthService {
    * @param rt : refresh token
    */
   async updateRefreshToken(userId, rt: string) {
-    const hashedRt = await this.hashDate(rt);
+    const hashedRt = await this.hashData(rt);
     return await this.userService.update(userId, {
       refreshToken: hashedRt,
     });

@@ -17,5 +17,5 @@ export class SignUpDto {
   @IsNotEmpty()
   @MinLength(6)
   @Match('password')
-  passwordConfirm: string;
+  confirmPassword: string;
 }
