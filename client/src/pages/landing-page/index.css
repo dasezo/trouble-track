@@ -1,0 +1,7 @@
+.nav-links {
+  li {
+    &:hover {
+      @apply text-blue-500;
+    }
+  }
+}
