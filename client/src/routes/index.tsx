@@ -1,31 +1,37 @@
+import App from '@/app';
+import EmptyProjects from '@/components/dashboard/empty-projects';
 import { useAuth } from '@/hooks/useAuth';
 import LoginPage from '@/pages/auth/login';
 import RegisterPage from '@/pages/auth/register';
 import DashboardPage from '@/pages/dashboard';
-import ErrorPage from '@/pages/error-page';
+import ProjectsPage from '@/pages/dashboard/projects';
 import LandingPage from '@/pages/landing-page';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { ProtectedRoute } from './ProtectedRoutes';
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from 'react-router-dom';
+import { ProtectedRoute } from './protected-routes';
 const Routes = () => {
-  const { user } = useAuth();
-  console.log(user);
-  // Define public routes accessible to all users
-  const routesForPublic = [
-    {
-      path: '/about-us',
-      element: <div>About Us</div>,
-    },
-  ];
-
+  const { isLoggedIn } = useAuth();
+  console.log('logged:', isLoggedIn);
   // Define routes accessible only to authenticated users
   const routesForAuthenticatedOnly = [
     {
-      path: '/',
-      element: <ProtectedRoute />, // Wrap the component in ProtectedRoute
+      path: '',
+      element: (
+        <ProtectedRoute>
+          <DashboardPage />
+        </ProtectedRoute>
+      ), // Wrap the component in ProtectedRoute
       children: [
         {
           path: '',
-          element: <DashboardPage />,
+          element: <EmptyProjects />,
+        },
+        {
+          path: 'projects',
+          element: <ProjectsPage />,
         },
       ],
     },
@@ -34,9 +40,8 @@ const Routes = () => {
   // Define routes accessible only to non-authenticated users
   const routesForNotAuthenticatedOnly = [
     {
-      path: '/',
+      path: '',
       element: <LandingPage />,
-      errorElement: <ErrorPage />,
     },
     {
       path: '/register',
@@ -47,11 +52,18 @@ const Routes = () => {
       element: <LoginPage />,
     },
   ];
+
   const router = createBrowserRouter([
-    ...routesForPublic,
-    ...(!user ? routesForNotAuthenticatedOnly : []),
-    ...routesForAuthenticatedOnly,
+    {
+      path: '/',
+      element: <App />,
+      errorElement: <Navigate to="/" />,
+      children: isLoggedIn
+        ? routesForAuthenticatedOnly
+        : routesForNotAuthenticatedOnly,
+    },
   ]);
+
   return <RouterProvider router={router} />;
 };
 

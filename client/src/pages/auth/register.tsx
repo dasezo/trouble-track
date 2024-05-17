@@ -23,7 +23,7 @@ import { z } from 'zod';
 import AuthLayout from './layout';
 
 const RegisterPage = () => {
-  const { setToken } = useAuth();
+  const { onAuth } = useAuth();
   const navigate = useNavigate();
   const [successMessage, setSuccessMessage] = useState<boolean>(false);
   const [accessToken, setAccessToken] = useState<string | null>(null);
@@ -74,6 +74,11 @@ const RegisterPage = () => {
           },
           { shouldFocus: true },
         );
+      } else {
+        form.setError('root', {
+          type: 'string',
+          message: 'Something went wrong! cannot connect to server.',
+        });
       }
     },
   });
@@ -83,7 +88,7 @@ const RegisterPage = () => {
   };
 
   const enterAccount = () => {
-    if (accessToken) setToken(accessToken);
+    if (accessToken) onAuth(accessToken);
     navigate('/', { replace: true });
   };
 
@@ -168,6 +173,11 @@ const RegisterPage = () => {
                     )}
                   />
                 </div>
+                {form.formState?.errors?.root && (
+                  <span className="text-sm font-medium text-destructive">
+                    {form.formState?.errors?.root?.message}
+                  </span>
+                )}
                 <Button type="submit" className="w-full" disabled={isPending}>
                   {isPending ? 'Loading...' : 'Register'}
                 </Button>

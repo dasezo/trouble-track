@@ -1,5 +1,6 @@
 import axios from '@/api/axios';
 import CardWrapper from '@/components/auth/card-wrapper';
+import Spinner from '@/components/spinner';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -21,7 +22,7 @@ import { z } from 'zod';
 import AuthLayout from './layout';
 
 const LoginPage = () => {
-  const { setToken } = useAuth();
+  const { onAuth } = useAuth();
   const navigate = useNavigate();
   const form = useForm({
     resolver: zodResolver(LoginSchema),
@@ -34,15 +35,19 @@ const LoginPage = () => {
     mutationFn: (loginData: z.infer<typeof LoginSchema>) =>
       axios.post('auth/login', loginData),
     onSuccess: (res: AxiosResponse) => {
-      setToken(res.data.accessToken);
+      onAuth(res.data.accessToken);
       navigate('/', { replace: true });
     },
     onError: (err: AxiosError) => {
-      console.error(err.message);
       if (err.response?.status === 401) {
         form.setError('root', {
           type: 'string',
           message: 'Invalid email or password',
+        });
+      } else {
+        form.setError('root', {
+          type: 'string',
+          message: 'Something went wrong! cannot connect to server.',
         });
       }
     },
@@ -99,7 +104,7 @@ const LoginPage = () => {
               </span>
             )}
             <Button type="submit" className="w-full" disabled={isPending}>
-              {isPending ? 'Loading...' : 'Log In'}
+              {isPending ? <Spinner size="16" className="mr-2" /> : ''}Log In
             </Button>
           </form>
         </Form>
