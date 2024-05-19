@@ -25,9 +25,9 @@ export function getMenuList(pathname: string): Group[] {
       groupLabel: '',
       menus: [
         {
-          href: '/',
+          href: '/dashboard',
           label: 'Dashboard',
-          active: pathname === '/',
+          active: pathname === '/dashboard',
           icon: LayoutGrid,
           submenus: [],
         },
@@ -43,19 +43,19 @@ export function getMenuList(pathname: string): Group[] {
           icon: PanelsTopLeft,
           submenus: [
             {
-              href: '/projects',
+              href: '/dashboard/projects',
               label: 'All projects',
-              active: pathname === '/projects',
+              active: pathname === '/dashboard/projects',
             },
             {
-              href: '/projects/new',
+              href: '/dashboard/projects/new',
               label: 'New Project',
-              active: pathname === '/projects/new',
+              active: pathname === '/dashboard/projects/new',
             },
           ],
         },
         {
-          href: '/issues',
+          href: '/dashboard/issues',
           label: 'Issues',
           active: pathname.includes('/issues'),
           icon: Bug,
@@ -67,7 +67,7 @@ export function getMenuList(pathname: string): Group[] {
       groupLabel: 'Settings',
       menus: [
         {
-          href: '/account',
+          href: '/dashboard/account',
           label: 'Account',
           active: pathname.includes('/account'),
           icon: User,

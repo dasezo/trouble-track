@@ -1,9 +1,12 @@
 import App from '@/app';
-import EmptyProjects from '@/components/dashboard/empty-projects';
 import { useAuth } from '@/hooks/useAuth';
 import LoginPage from '@/pages/auth/login';
 import RegisterPage from '@/pages/auth/register';
-import DashboardPage from '@/pages/dashboard';
+import Dashboard from '@/pages/dashboard';
+import AccountPage from '@/pages/dashboard/account';
+import DashboardPage from '@/pages/dashboard/dashboard';
+import IssuesPage from '@/pages/dashboard/issues';
+import NewProjectsPage from '@/pages/dashboard/new-project';
 import ProjectsPage from '@/pages/dashboard/projects';
 import LandingPage from '@/pages/landing-page';
 import {
@@ -14,53 +17,55 @@ import {
 import { ProtectedRoute } from './protected-routes';
 const Routes = () => {
   const { isLoggedIn } = useAuth();
-  console.log('logged:', isLoggedIn);
-  // Define routes accessible only to authenticated users
-  const routesForAuthenticatedOnly = [
-    {
-      path: '',
-      element: (
-        <ProtectedRoute>
-          <DashboardPage />
-        </ProtectedRoute>
-      ), // Wrap the component in ProtectedRoute
-      children: [
-        {
-          path: '',
-          element: <EmptyProjects />,
-        },
-        {
-          path: 'projects',
-          element: <ProjectsPage />,
-        },
-      ],
-    },
-  ];
-
-  // Define routes accessible only to non-authenticated users
-  const routesForNotAuthenticatedOnly = [
-    {
-      path: '',
-      element: <LandingPage />,
-    },
-    {
-      path: '/register',
-      element: <RegisterPage />,
-    },
-    {
-      path: '/login',
-      element: <LoginPage />,
-    },
-  ];
-
   const router = createBrowserRouter([
     {
       path: '/',
       element: <App />,
-      errorElement: <Navigate to="/" />,
-      children: isLoggedIn
-        ? routesForAuthenticatedOnly
-        : routesForNotAuthenticatedOnly,
+      // errorElement: <Navigate to="/" />,
+      children: [
+        {
+          path: '',
+          element: isLoggedIn ? <Navigate to="/dashboard" /> : <LandingPage />,
+        },
+        {
+          path: 'register',
+          element: isLoggedIn ? <Navigate to="/dashboard" /> : <RegisterPage />,
+        },
+        {
+          path: 'login',
+          element: isLoggedIn ? <Navigate to="/dashboard" /> : <LoginPage />,
+        },
+        {
+          path: 'dashboard',
+          element: (
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          ), // Wrap the component in ProtectedRoute
+          children: [
+            {
+              path: '',
+              element: <DashboardPage />,
+            },
+            {
+              path: 'projects',
+              element: <ProjectsPage />,
+            },
+            {
+              path: 'projects/new',
+              element: <NewProjectsPage />,
+            },
+            {
+              path: 'issues',
+              element: <IssuesPage />,
+            },
+            {
+              path: 'account',
+              element: <AccountPage />,
+            },
+          ],
+        },
+      ],
     },
   ]);
 

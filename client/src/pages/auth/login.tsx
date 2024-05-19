@@ -36,7 +36,7 @@ const LoginPage = () => {
       axios.post('auth/login', loginData),
     onSuccess: (res: AxiosResponse) => {
       onAuth(res.data.accessToken);
-      navigate('/', { replace: true });
+      navigate('/dashboard', { replace: true });
     },
     onError: (err: AxiosError) => {
       if (err.response?.status === 401) {

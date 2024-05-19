@@ -1,16 +1,11 @@
-import { Footer } from '@/components/dashboard/footer';
-import { Sidebar } from '@/components/dashboard/sidebar';
-import SidebarProvider from '@/contexts/sidebar-context';
-import { Outlet, useLocation } from 'react-router-dom';
-const DashboardPage = () => {
-  console.log(useLocation());
+import UserProvider from '@/contexts/user-context';
+import Layout from './layout';
+const Dashboard = () => {
   return (
-    <SidebarProvider>
-      <Sidebar />
-      <Outlet />
-      <Footer />
-    </SidebarProvider>
+    <UserProvider>
+      <Layout />
+    </UserProvider>
   );
 };
 
-export default DashboardPage;
+export default Dashboard;

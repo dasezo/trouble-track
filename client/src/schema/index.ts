@@ -23,3 +23,15 @@ export const LoginSchema = z.object({
     message: 'Password must be at least 6 characters long',
   }),
 });
+
+export const CreateProjectSchema = z.object({
+  name: z.string().min(1, {
+    message: 'Please enter project name',
+  }),
+  url: z.string().url({
+    message: 'Please enter a valid URL',
+  }),
+  description: z.string().min(1, {
+    message: 'Please enter project description',
+  }),
+});

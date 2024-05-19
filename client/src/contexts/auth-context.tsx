@@ -20,19 +20,20 @@ export const AuthContext = createContext<AuthContextType>(
 const AuthProvider = ({ children }: Props) => {
   const [token, setToken] = useState<string | null>(null);
   const [isReady, setIsReady] = useState(false);
-  const storedToken = useLocalStorage('token');
+  const { setItem, getItem, removeItem } = useLocalStorage('token');
 
   useEffect(() => {
-    const token = storedToken.getItem();
+    const token = getItem();
     if (token) {
       setToken(token);
     }
+
     setIsReady(true);
   }, []);
 
   const updateToken = (token: string) => {
     setToken(token);
-    storedToken.setItem(token);
+    setItem(token);
   };
 
   const onAuth = (token: string) => {
@@ -44,11 +45,10 @@ const AuthProvider = ({ children }: Props) => {
   };
 
   const onLogout = () => {
-    storedToken.removeItem();
+    removeItem();
     setToken('');
-    return <Navigate to="/login" />;
+    <Navigate to="/login" />;
   };
-  console.log('token:', token);
   return (
     <AuthContext.Provider
       value={{ onAuth, token, updateToken, onLogout, isLoggedIn: isLoggedIn() }}

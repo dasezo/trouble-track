@@ -89,7 +89,7 @@ const RegisterPage = () => {
 
   const enterAccount = () => {
     if (accessToken) onAuth(accessToken);
-    navigate('/', { replace: true });
+    navigate('/dashboard', { replace: true });
   };
 
   return (

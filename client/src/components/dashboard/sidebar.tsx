@@ -10,7 +10,6 @@ import { SidebarToggle } from './sidebar-toggle';
 
 export function Sidebar() {
   const { isOpen, toggleSidebar } = useSidebarToggle();
-  console.log(isOpen);
   return (
     <aside
       className={cn(

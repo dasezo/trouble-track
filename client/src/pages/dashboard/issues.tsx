@@ -10,9 +10,9 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Link } from 'react-router-dom';
 
-export default function ProjectsPage() {
+export default function IssuesPage() {
   return (
-    <ContentLayout title="Projects">
+    <ContentLayout title="Issues">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -22,7 +22,7 @@ export default function ProjectsPage() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Projects</BreadcrumbPage>
+            <BreadcrumbPage>Issues</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

@@ -1,42 +1,51 @@
-import { useEffect } from 'react';
-import { axiosPrivate } from '../api/axios';
+import { API_URL } from '@/config';
+import axios, { AxiosResponse } from 'axios';
+import dayjs from 'dayjs';
+import { jwtDecode } from 'jwt-decode';
 import { useAuth } from './useAuth';
-import { useRefreshToken } from './useRefreshToken';
 
 export const useAxiosPrivate = () => {
-  const refresh = useRefreshToken();
-  const { token } = useAuth();
+  const { token, updateToken, onLogout } = useAuth();
+  const axiosPrivate = axios.create({
+    baseURL: API_URL,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    withCredentials: true,
+  });
 
-  useEffect(() => {
-    const requestIntercept = axiosPrivate.interceptors.request.use(
-      (config) => {
-        if (!config.headers['Authorization']) {
-          config.headers['Authorization'] = `Bearer ${token}`;
-        }
-        return config;
-      },
-      (error) => Promise.reject(error),
-    );
+  /**
+   * * Refresh Token after it expires and resieves 401 status code
+   *
+   */
 
-    const responseIntercept = axiosPrivate.interceptors.response.use(
-      (response) => response,
-      async (error) => {
-        const prevRequest = error?.config;
-        if (error?.response?.status === 401 && !prevRequest?.sent) {
-          prevRequest.sent = true;
-          const newAccessToken = await refresh();
-          prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
-          return axiosPrivate(prevRequest);
-        }
-        return Promise.reject(error);
-      },
-    );
+  axiosPrivate.interceptors.request.use(
+    async function (config) {
+      if (token === null) return config;
+      const currentToken = jwtDecode(token);
+      const isExpired =
+        dayjs.unix(currentToken.exp as number).diff(dayjs()) < 1;
+      if (!isExpired) return config;
 
-    return () => {
-      axiosPrivate.interceptors.request.eject(requestIntercept);
-      axiosPrivate.interceptors.response.eject(responseIntercept);
-    };
-  }, [token, refresh]);
+      try {
+        const response: AxiosResponse = await axios.get(
+          `${API_URL}auth/refresh`,
+          { withCredentials: true },
+        );
+
+        updateToken(response?.data.accessToken);
+        config.headers.Authorization = `Bearer ${response?.data.accessToken}`;
+      } catch (err) {
+        onLogout();
+        throw new Error(err.message);
+      }
+    },
+    function (error) {
+      // Do something with request error
+      return Promise.reject(error);
+    },
+  );
 
   return axiosPrivate;
 };
