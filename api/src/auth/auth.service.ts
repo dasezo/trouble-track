@@ -34,11 +34,10 @@ export class AuthService {
     return tokens;
   }
 
-  async login(loginDto: LogInDto): Promise<Tokens> {
+  async login(loginDto: LogInDto) {
     const { email, password } = loginDto;
 
     const user = await this.userService.findByEmail(email);
-
     if (!user) {
       throw new UnauthorizedException('Invalid email or password');
     }
@@ -53,6 +52,7 @@ export class AuthService {
       accessToken: this.getAccessToken(user.id, user.email, user.name),
       refreshToken: this.getRefreshToken(user.id, user.email),
     };
+    tokens;
     await this.updateRefreshToken(user.id, tokens.refreshToken);
 
     return tokens;

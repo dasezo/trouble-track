@@ -31,7 +31,6 @@ export class AuthController {
     res.cookie('jwt_refresh', refreshToken, {
       httpOnly: true, //accessible only by web server
       // secure: true, //https
-      sameSite: 'none', //cross-site cookie
       expires: new Date(
         Date.now() + Number(process.env.JWT_REFRESH_EXPIRES_IN) * 1000,
       ), // im ms* 30
@@ -50,10 +49,10 @@ export class AuthController {
   ) {
     const { accessToken, refreshToken } =
       await this.authService.login(loginDto);
+
     res.cookie('jwt_refresh', refreshToken, {
       httpOnly: true, //accessible only by web server
       // secure: true, //https
-      sameSite: 'none', //cross-site cookie
       expires: new Date(
         Date.now() + Number(process.env.JWT_REFRESH_EXPIRES_IN) * 1000,
       ), // im ms* 30
@@ -62,7 +61,7 @@ export class AuthController {
     return { accessToken };
   }
 
-  @Get('logout')
+  @Post('logout')
   @HttpCode(HttpStatus.OK)
   async logout(
     @Res({ passthrough: true }) res: Response,

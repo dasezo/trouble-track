@@ -7,6 +7,7 @@ import {
   Patch,
   Query,
 } from '@nestjs/common';
+import { GetCurrentUserId } from 'src/common/decorators';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
 
@@ -28,7 +29,11 @@ export class UsersController {
   async findAll() {
     return await this.usersService.findAll();
   }
-  // @Public()
+  @Get('me')
+  async me(@GetCurrentUserId() userId) {
+    return await this.usersService.getUserData(userId);
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return await this.usersService.findOne(id);

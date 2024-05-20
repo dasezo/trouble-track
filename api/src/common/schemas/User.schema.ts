@@ -18,6 +18,9 @@ export class User {
   refreshToken?: string;
 
   @Prop({ required: false })
-  avatrUrl?: string;
+  avatarUrl?: string;
+
+  createdAt: Date;
+  updatedAt: Date;
 }
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -5,6 +5,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { AtGuard } from './common/guards';
 import { UsersModule } from './users/users.module';
+import { ProjectsModule } from './projects/projects.module';
+import { IssuesModule } from './issues/issues.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -14,6 +16,8 @@ import { UsersModule } from './users/users.module';
     MongooseModule.forRoot(process.env.DB_URI),
     AuthModule,
     UsersModule,
+    ProjectsModule,
+    IssuesModule,
   ],
   controllers: [],
   providers: [{ provide: APP_GUARD, useClass: AtGuard }],

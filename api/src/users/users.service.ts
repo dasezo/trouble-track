@@ -27,6 +27,16 @@ export class UsersService {
     if (!isValidObjectId(id)) throw new BadRequestException('Invalid id');
     return await this.userModel.findById(id);
   }
+
+  async getUserData(id: string): Promise<UserDocument> {
+    if (!isValidObjectId(id)) throw new BadRequestException('Invalid id');
+    return await this.userModel.findById(id, {
+      password: 0,
+      refreshToken: 0,
+      __v: 0,
+    });
+  }
+
   async findByEmail(email: string): Promise<UserDocument> {
     return await this.userModel.findOne({ email }).exec();
   }
