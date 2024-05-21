@@ -17,13 +17,13 @@ export class Project {
   @Prop({ required: true })
   description: string;
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: User.name })
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User' })
   user: User;
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: Issue.name })
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Issue' })
   issues: [Issue];
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: Performance.name })
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Performance' })
   performanceRecords: [Performance];
 
   createdAt: Date;

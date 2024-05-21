@@ -20,6 +20,10 @@ export class IssuesService {
   async create(projectId: string, createIssueDto: CreateIssueDto) {
     if (!isValidObjectId(projectId))
       throw new BadRequestException('Invalid project id');
+
+    const project = await this.projectsService.findOne(projectId);
+
+    if (!project) throw new NotFoundException('Project not found');
     const newIssue = await this.issueModel.create({
       ...createIssueDto,
       severity: this.determineSeverity(createIssueDto.type),

@@ -10,32 +10,35 @@ export class ProjectsService {
   constructor(
     @InjectModel(Project.name) private projectModel: Model<ProjectDocument>,
   ) {}
-  create(userId: string, createProjectDto: CreateProjectDto) {
-    return this.projectModel.create({ ...createProjectDto, user: userId });
+  async create(userId: string, createProjectDto: CreateProjectDto) {
+    return await this.projectModel.create({
+      ...createProjectDto,
+      user: userId,
+    });
   }
 
-  findAll(userId: string) {
-    return this.projectModel.find({ user: userId });
+  async findAll(userId: string) {
+    return await this.projectModel.find({ user: userId });
   }
 
-  findOne(id: string) {
+  async findOne(id: string) {
     if (!isValidObjectId(id))
       throw new BadRequestException('Invalid project id');
-    return this.projectModel.findById(id);
+    return await this.projectModel.findById(id);
   }
 
-  update(id: string, updateProjectDto: UpdateProjectDto) {
+  async update(id: string, updateProjectDto: UpdateProjectDto) {
     if (!isValidObjectId(id))
       throw new BadRequestException('Invalid project id');
-    return this.projectModel.findByIdAndUpdate(id, updateProjectDto, {
+    return await this.projectModel.findByIdAndUpdate(id, updateProjectDto, {
       new: true,
     });
   }
 
-  remove(id: string) {
+  async remove(id: string) {
     if (!isValidObjectId(id))
       throw new BadRequestException('Invalid project id');
-    return this.projectModel.findByIdAndDelete(id);
+    return await this.projectModel.findByIdAndDelete(id);
   }
 
   async addIssue(projectId: string, issueId: string) {
@@ -49,6 +52,14 @@ export class ProjectsService {
     return await this.projectModel.findByIdAndUpdate(
       projectId,
       { $pull: { issues: issueId } },
+      { new: true },
+    );
+  }
+
+  async addPerformance(projectId: string, performanceId: string) {
+    return await this.projectModel.findByIdAndUpdate(
+      projectId,
+      { $addToSet: { performanceRecords: performanceId } },
       { new: true },
     );
   }
