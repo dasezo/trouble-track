@@ -1,4 +1,5 @@
-import { Controller, Get } from '@nestjs/common';
+import { BadRequestException, Controller, Get, Param } from '@nestjs/common';
+import { isValidObjectId } from 'mongoose';
 import { GetCurrentUserId } from 'src/common/decorators';
 import { StatisticsService } from './statistics.service';
 
@@ -8,11 +9,65 @@ export class StatisticsController {
 
   @Get()
   async getStats(@GetCurrentUserId() userId: string) {
-    const totalErrors =
-      await this.statisticsService.getTotlaErrorsForUser(userId);
+    const totalErrors = await this.statisticsService.countTotalIssues(userId);
 
+    const errorTrends = await this.statisticsService.countErrorTrends(userId);
+
+    const errorsDistribution =
+      await this.statisticsService.countErrorsByType(userId);
+    const errorsBySeverity =
+      await this.statisticsService.countErrorsBySeverity(userId);
+
+    const averageResolutionTime =
+      await this.statisticsService.countAverageResolutionTime(userId);
     return {
       totalErrors,
+      errorTrends,
+      errorsDistribution,
+      errorsBySeverity,
+      averageResolutionTime,
+    };
+  }
+
+  @Get(':projectId')
+  async getProjectStats(@Param('projectId') projectId: string) {
+    if (!isValidObjectId(projectId))
+      throw new BadRequestException('Invalid project Id');
+    const totalRequests =
+      await this.statisticsService.countProjectTotalRequests(projectId);
+    const totalErrors =
+      await this.statisticsService.countProjectTotalIssues(projectId);
+
+    const errorTrends =
+      await this.statisticsService.countProjectErrorTrends(projectId);
+
+    const errorsDistribution =
+      await this.statisticsService.countProjectErrorsByType(projectId);
+    const errorsBySeverity =
+      await this.statisticsService.countProjectErrorsBySeverity(projectId);
+
+    const averageResolutionTime =
+      await this.statisticsService.countProjectAverageResolutionTime(projectId);
+
+    const averageResopnseTime =
+      await this.statisticsService.countProjectAverageResponseTime(projectId);
+    const averageLoadTime =
+      await this.statisticsService.countProjectAverageLoadTime(projectId);
+
+    const performanceMetrics = {
+      totalRequests,
+      errorRate: `${(totalErrors / totalRequests) * 100}%`,
+      averageResopnseTime,
+      averageLoadTime,
+    };
+    return {
+      projectId,
+      performanceMetrics,
+      averageResolutionTime,
+      totalErrors,
+      errorTrends,
+      errorsDistribution,
+      errorsBySeverity,
     };
   }
 }
