@@ -45,7 +45,7 @@ export class ProjectsService {
       { new: true },
     );
   }
-  async removeOwner(projectId: string, issueId: string) {
+  async removeIssue(projectId: string, issueId: string) {
     return await this.projectModel.findByIdAndUpdate(
       projectId,
       { $pull: { issues: issueId } },

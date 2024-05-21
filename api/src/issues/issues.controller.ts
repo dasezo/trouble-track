@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { Public } from 'src/common/decorators';
 import { CreateIssueDto } from './dto/create-issue.dto';
@@ -26,22 +27,22 @@ export class IssuesController {
   }
 
   @Get()
-  findAll() {
-    return this.issuesService.findAll();
+  findAll(@Query('projectId') projectId: string) {
+    return this.issuesService.findAll(projectId);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.issuesService.findOne(+id);
+    return this.issuesService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateIssueDto: UpdateIssueDto) {
-    return this.issuesService.update(+id, updateIssueDto);
+    return this.issuesService.update(id, updateIssueDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.issuesService.remove(+id);
+    return this.issuesService.remove(id);
   }
 }
