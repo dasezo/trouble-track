@@ -25,18 +25,22 @@ const UserProvider = ({ children }: Props) => {
   const axios = useAxiosPrivate();
   // const [user, setUser] = useState<UserInterface | null>(null);
 
-  const { data, isError, isLoading, error } = useQuery({
+  const {
+    data: user,
+    isError,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ['accountInfo'],
     queryFn: async () => {
-      const user = await axios.get('users/me');
-      return user;
+      const data = await axios.get('users/me');
+      return data.data;
     },
     retry: 2,
   });
   if (isError) {
     throw new Error(error.message);
   }
-  const user = data?.data;
   return (
     <UserContext.Provider value={{ user, isLoading }}>
       {children}

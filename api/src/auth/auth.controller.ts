@@ -31,9 +31,6 @@ export class AuthController {
     res.cookie('jwt_refresh', refreshToken, {
       httpOnly: true, //accessible only by web server
       // secure: true, //https
-      expires: new Date(
-        Date.now() + Number(process.env.JWT_REFRESH_EXPIRES_IN) * 1000,
-      ), // im ms* 30
     });
     delete signUpDto.password;
     delete signUpDto.confirmPassword;
@@ -53,9 +50,6 @@ export class AuthController {
     res.cookie('jwt_refresh', refreshToken, {
       httpOnly: true, //accessible only by web server
       // secure: true, //https
-      expires: new Date(
-        Date.now() + Number(process.env.JWT_REFRESH_EXPIRES_IN) * 1000,
-      ), // im ms* 30
     });
 
     return { accessToken };
