@@ -332,7 +332,7 @@ export class StatisticsService {
     const project = await this.projectModel.findById(projectId);
     if (!project) throw new NotFoundException('Project Not Found');
 
-    const averageResopnseTime = await this.performanceModel
+    const result = await this.performanceModel
       .aggregate([
         {
           $match: {
@@ -354,14 +354,18 @@ export class StatisticsService {
         },
       ])
       .exec();
-    return `${averageResopnseTime[0].averageResponseTime} ms`;
+    if (result.length > 0) {
+      return `${result[0].averageResponseTime} ms`;
+    } else {
+      return '0 ms';
+    }
   }
 
   async countProjectAverageLoadTime(projectId: string) {
     const project = await this.projectModel.findById(projectId);
     if (!project) throw new NotFoundException('Project Not Found');
 
-    const averageLoadTime = await this.performanceModel
+    const result = await this.performanceModel
       .aggregate([
         {
           $match: {
@@ -383,6 +387,10 @@ export class StatisticsService {
         },
       ])
       .exec();
-    return `${averageLoadTime[0].averageLoadTime} ms`;
+    if (result.length > 0) {
+      return `${result[0].averageLoadTime} ms`;
+    } else {
+      return '0 ms';
+    }
   }
 }

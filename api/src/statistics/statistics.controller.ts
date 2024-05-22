@@ -54,9 +54,10 @@ export class StatisticsController {
     const averageLoadTime =
       await this.statisticsService.countProjectAverageLoadTime(projectId);
 
+    const errorRate = (totalErrors / totalRequests) * 100;
     const performanceMetrics = {
       totalRequests,
-      errorRate: `${(totalErrors / totalRequests) * 100}%`,
+      errorRate: isNaN(errorRate) ? '0%' : `${errorRate}%`,
       averageResopnseTime,
       averageLoadTime,
     };
