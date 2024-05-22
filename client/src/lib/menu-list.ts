@@ -55,7 +55,7 @@ export function getMenuList(pathname: string): Group[] {
           ],
         },
         {
-          href: '/dashboard/issues',
+          href: '/dashboard/projects',
           label: 'Issues',
           active: pathname.includes('/issues'),
           icon: Bug,

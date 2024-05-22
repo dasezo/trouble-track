@@ -29,15 +29,14 @@ export default function ProjectsPage() {
   const axios = useAxiosPrivate();
   const [filter, setFilter] = useState<string>('');
 
+  let projects: ProjectType[] = [] as ProjectType[];
   const { isLoading, data, isError } = useQuery({
     queryKey: ['projects'],
-    queryFn: async () => {
-      const res = await axios.get('projects');
-      return res.data;
-    },
+    queryFn: async () => await axios.get('projects'),
   });
 
-  console.log(data);
+  projects = data?.data;
+
   return (
     <ContentLayout title="Projects">
       <Breadcrumb>
@@ -59,14 +58,14 @@ export default function ProjectsPage() {
             Error: Something Went Wrong! Try Again Later
           </div>
         ) : isLoading ? (
-          <LoadingScreen />
-        ) : data.length < 1 ? (
+          <LoadingScreen logo={false} />
+        ) : projects.length < 1 ? (
           <EmptyProjects />
         ) : (
           <>
             <div className="border-b my-4 p-2 flex flex-wrap justify-between">
               <span className="text-lg font-semibold">
-                {data.length} Project{data.length > 1 && 's'}
+                {projects.length} Project{projects.length > 1 && 's'}
               </span>
               <Input
                 placeholder="Filter By Project Name"
@@ -75,7 +74,7 @@ export default function ProjectsPage() {
               />
             </div>
             <div className="flex flex-col gap-4">
-              {data
+              {projects
                 .filter((project) => {
                   if (project.name.includes(filter)) return project;
                 })

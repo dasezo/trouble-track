@@ -7,6 +7,7 @@ import AccountPage from '@/pages/dashboard/account';
 import DashboardPage from '@/pages/dashboard/dashboard';
 import IssuesPage from '@/pages/dashboard/issues';
 import NewProjectsPage from '@/pages/dashboard/new-project';
+import ProjectPage from '@/pages/dashboard/project';
 import ProjectsPage from '@/pages/dashboard/projects';
 import LandingPage from '@/pages/landing-page';
 import {
@@ -52,11 +53,15 @@ const Routes = () => {
               element: <ProjectsPage />,
             },
             {
+              path: 'projects/:projectId',
+              element: <ProjectPage />,
+            },
+            {
               path: 'projects/new',
               element: <NewProjectsPage />,
             },
             {
-              path: 'issues',
+              path: 'issues/:projectId',
               element: <IssuesPage />,
             },
             {
