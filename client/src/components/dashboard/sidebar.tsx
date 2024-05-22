@@ -1,5 +1,3 @@
-import { Home } from 'lucide-react';
-
 import { Menu } from '@/components/dashboard/menu';
 import { Button } from '@/components/ui/button';
 import { useSidebarToggle } from '@/hooks/useSidebarToggle';
@@ -28,7 +26,6 @@ export function Sidebar() {
           asChild
         >
           <Link to="/" className="flex items-center gap-2">
-            <Home className="w-6 h-6 mr-1" />
             <h1
               className={cn(
                 'font-bold text-lg whitespace-nowrap transition-[transform,opacity,display] ease-in-out duration-300',

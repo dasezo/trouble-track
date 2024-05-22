@@ -1,4 +1,4 @@
-import { Home, MenuIcon } from 'lucide-react';
+import { MenuIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 import { Menu } from '@/components/dashboard/menu';
@@ -27,7 +27,6 @@ export function SheetMenu() {
             asChild
           >
             <Link to="/dashboard" className="flex items-center gap-2">
-              <Home className="w-6 h-6 mr-1" />
               <h1 className="font-bold text-lg">
                 <Logo />
               </h1>

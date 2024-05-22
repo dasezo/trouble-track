@@ -1,5 +1,6 @@
 import { ContentLayout } from '@/components/dashboard/content-layout';
 import LoadingScreen from '@/components/loading-screen';
+import Spinner from '@/components/spinner';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,8 +10,19 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { useToast } from '@/components/ui/use-toast';
 import { useAxiosPrivate } from '@/hooks/useAxios';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { ArrowUpRight, Pen, Trash } from 'lucide-react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 const ProjectPage = () => {
@@ -20,7 +32,7 @@ const ProjectPage = () => {
   if (!projectId) navigate('/dashboard/projects');
 
   const axios = useAxiosPrivate();
-
+  const { toast } = useToast();
   const {
     data: project,
     isLoading,
@@ -33,7 +45,19 @@ const ProjectPage = () => {
       return { ...projectData.data, ...projectStats.data };
     },
   });
-  console.log(project);
+
+  const deleteProject = useMutation({
+    mutationFn: async () => {
+      await axios.delete(`/projects/${projectId}`);
+    },
+    onSuccess: () => {
+      toast({
+        description: 'Project Deleted Successfully.',
+      });
+      navigate('/dashboard/projects');
+    },
+  });
+
   return (
     <ContentLayout title={`Project: ${project?.name}`}>
       <Breadcrumb>
@@ -78,7 +102,7 @@ const ProjectPage = () => {
                 <Link
                   to={`/dashboard/issues/${projectId}?project=${project?.name}`}
                 >
-                  View Issues
+                  <ArrowUpRight className="size-4 mr-2" /> View Issues
                 </Link>
               </Button>
             </div>
@@ -174,6 +198,38 @@ const ProjectPage = () => {
                 </div>
               </div>
             )}
+            <div className="w-full flex justify-end space-x-4">
+              <Button variant={'secondary'} disabled>
+                <Pen className="mr-1 size-4" /> Edit
+              </Button>
+
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant={'destructive'}>
+                    <Trash className="mr-1 size-4" />
+                    Delete
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Delete project</DialogTitle>
+                    <DialogDescription>
+                      Are you sure you want to delete{' '}
+                      <strong>"{project.name}"</strong> project?
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter>
+                    <Button
+                      variant={'destructive'}
+                      onClick={() => deleteProject.mutate()}
+                      disabled={deleteProject.isPending}
+                    >
+                      {deleteProject.isPending && <Spinner size="16" />} Delete
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </div>
           </div>
         )}
       </section>
