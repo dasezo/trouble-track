@@ -25,6 +25,10 @@ export class StatisticsService {
     return this.issueModel.countDocuments({ project: { $in: projectIds } });
   }
 
+  async countTotalProjecs(userId: string) {
+    return await this.projectModel.countDocuments({ user: userId });
+  }
+
   async countErrorTrends(userId: string) {
     const projects = await this.projectModel
       .find({ user: userId })
@@ -355,7 +359,7 @@ export class StatisticsService {
       ])
       .exec();
     if (result.length > 0) {
-      return `${result[0].averageResponseTime} ms`;
+      return `${result[0].averageResponseTime.toFixed(2)} ms`;
     } else {
       return '0 ms';
     }

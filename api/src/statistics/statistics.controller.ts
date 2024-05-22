@@ -9,6 +9,8 @@ export class StatisticsController {
 
   @Get()
   async getStats(@GetCurrentUserId() userId: string) {
+    const totalProjects =
+      await this.statisticsService.countTotalProjecs(userId);
     const totalErrors = await this.statisticsService.countTotalIssues(userId);
 
     const errorTrends = await this.statisticsService.countErrorTrends(userId);
@@ -21,6 +23,7 @@ export class StatisticsController {
     const averageResolutionTime =
       await this.statisticsService.countAverageResolutionTime(userId);
     return {
+      totalProjects,
       totalErrors,
       errorTrends,
       errorsDistribution,
