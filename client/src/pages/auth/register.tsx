@@ -1,6 +1,7 @@
 import axios from '@/api/axios';
 import CardWrapper from '@/components/auth/card-wrapper';
 import Logo from '@/components/logo';
+import Spinner from '@/components/spinner';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -21,7 +22,6 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import AuthLayout from './layout';
-
 const RegisterPage = () => {
   const { onAuth } = useAuth();
   const navigate = useNavigate();
@@ -179,7 +179,8 @@ const RegisterPage = () => {
                   </span>
                 )}
                 <Button type="submit" className="w-full" disabled={isPending}>
-                  {isPending ? 'Loading...' : 'Register'}
+                  {isPending ? <Spinner size="16" className="mr-2" /> : ''}
+                  Register
                 </Button>
               </form>
             </Form>

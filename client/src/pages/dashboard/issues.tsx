@@ -108,36 +108,6 @@ export default function IssuesPage() {
           <LoadingScreen logo={false} />
         ) : (
           <div>
-            {/* <div className="flex gap-4 my-2">
-              <Select>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Error Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Error Type</SelectLabel>
-                    <SelectItem defaultValue={'all'}>All Types</SelectItem>
-                    <SelectItem value="open">Open</SelectItem>
-                    <SelectItem value="closed">Closed</SelectItem>
-                    <SelectItem value="Archived">Archived</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              <Select>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Select a severity" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Error Severity</SelectLabel>
-                    <SelectItem defaultValue={'all'}>All Severities</SelectItem>
-                    <SelectItem value="minor">Minor</SelectItem>
-                    <SelectItem value="major">Major</SelectItem>
-                    <SelectItem value="crucial">Crucial</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div> */}
             <div className="flex flex-col gap-4">
               {issues.map((issue) => (
                 <div

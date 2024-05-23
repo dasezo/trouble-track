@@ -141,6 +141,14 @@ const ProjectPage = () => {
                     {project?.performanceMetrics.averageLoadTime}
                   </p>
                 </div>
+                <div className="border rounded p-2">
+                  <h4 className="text-lg font-semibold">
+                    Average Resolution Time
+                  </h4>
+                  <p className="text-gray-500 dark:text-gray-200 ">
+                    {project?.averageResolutionTime}
+                  </p>
+                </div>
               </div>
             </div>
             {project?.totalErrors > 0 && (

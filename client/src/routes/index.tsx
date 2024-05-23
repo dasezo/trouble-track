@@ -9,6 +9,7 @@ import IssuesPage from '@/pages/dashboard/issues';
 import NewProjectsPage from '@/pages/dashboard/new-project';
 import ProjectPage from '@/pages/dashboard/project';
 import ProjectsPage from '@/pages/dashboard/projects';
+import ErrorPage from '@/pages/error-page';
 import LandingPage from '@/pages/landing-page';
 import {
   createBrowserRouter,
@@ -22,7 +23,7 @@ const Routes = () => {
     {
       path: '/',
       element: <App />,
-      // errorElement: <Navigate to="/" />,
+      errorElement: <ErrorPage />,
       children: [
         {
           path: '',
