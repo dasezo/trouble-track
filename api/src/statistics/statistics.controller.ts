@@ -60,7 +60,7 @@ export class StatisticsController {
     const errorRate = (totalErrors / totalRequests) * 100;
     const performanceMetrics = {
       totalRequests,
-      errorRate: isNaN(errorRate) ? '0%' : `${errorRate}%`,
+      errorRate: isNaN(errorRate) ? '0%' : `${errorRate.toFixed(2)}%`,
       averageResopnseTime,
       averageLoadTime,
     };

@@ -392,7 +392,7 @@ export class StatisticsService {
       ])
       .exec();
     if (result.length > 0) {
-      return `${result[0].averageLoadTime} ms`;
+      return `${result[0].averageLoadTime.toFixed(2)} ms`;
     } else {
       return '0 ms';
     }
